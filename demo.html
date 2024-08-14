@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/layui/2.9.13/css/layui.min.css" rel="stylesheet">
+  <style>
+body {
+  overflow: hidden;
+}
+
+#main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+    #main{
+      display: flex;
+  height: 100vh; /* 视口高度 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+    }
+    #img{
+      width:100%;
+    }
+    @media screen and (min-width:1024px) {
+      #img{
+        width:auto;
+        height: 100%;
+      }
+    }
+  </style>
+  <!--引入事件类-->
+  <script src="./js/EventUtil.js"></script>
+</head>
+<body style="font-size: 14px;">
+  <div id="main">
+    <img id="img" src="">
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/layui/2.9.11/layui.min.js" integrity="sha512-WgsIP9Sp7/rWemDCn8U2lKWiBiarjMjce8TiPPdwBNVN8Wvs1I8iYZR7uOhvQl1uiirX2uybXde7MnJ4biqC1Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <script>
+    layui.use(['jquery'], function () {
+        var $ = layui.jquery;
+
+        var imglist=[
+      'https://img.picui.cn/free/2024/06/28/667e355081f5d.jpg',
+      'https://shijuepi.com/uploads/allimg/201222/1-2012221T114.jpg',
+      'https://img95.699pic.com/photo/40250/3647.jpg_wh300.jpg',
+      'https://img.picui.cn/free/2024/06/28/667e7749bb352.jpg'
+    ]
+    console.log(imglist);
+    console.log(i);
+preloadImages(imglist, function() {
+  console.log('所有图片都已加载完毕！');
+});
+    if(document.location.hash.slice(1)){
+      $("#img").attr("src",imglist[document.location.hash.slice(1)]);
+      var i = document.location.hash.slice(1);
+    }else{
+      $("#img").attr("src",imglist[0]);
+      var i = 0;
+    }
+    console.log(i);
+     //获取dom
+     let domContent = document.querySelector('#main');
+
+     //定义各类事件，为了可以解除事件绑定，事件回调不使用匿名函数
+     function handleClick() {
+      // alert('点击事件');
+     }
+     function handleLeft() {
+      // alert('左滑事件');
+     }
+     function handleRight() {
+      // alert('右滑事件');
+     }
+     function handleUp() {
+        $("#img").attr("src",imglist[i--]);
+      // alert(i);
+     }
+     function handleDown() {
+        $("#img").attr("src",imglist[i++]);
+      // alert(i);
+     }
+     function handleLong() {
+      // alert('长按事件');
+     }
+     //绑定点击事件
+     EventUtil.bindEvent(domContent, 'click', handleClick);
+     //绑定两次左滑事件
+     EventUtil.bindEvent(domContent, 'swipeleft', handleLeft);
+     //绑定右滑事件
+     EventUtil.bindEvent(domContent, 'swiperight', handleRight);
+     //上滑事件
+     EventUtil.bindEvent(domContent, 'slideup', handleUp);
+     //下滑事件
+     EventUtil.bindEvent(domContent, 'slidedown', handleDown);
+     //长按点击事件
+     EventUtil.bindEvent(domContent, 'longpress', handleLong);
+    });
+
+    function preloadImages(imageUrls, callback) {
+  let images = {};
+  let loadedImages = 0;
+  let numImages = imageUrls.length;
+ 
+  // 创建一个Image对象的字典
+  for (let i = 0; i < numImages; i++) {
+    images[imageUrls[i]] = new Image();
+    images[imageUrls[i]].onload = function () {
+      // 每张图片加载完成后执行的回调
+      loadedImages++;
+      if (loadedImages === numImages && callback) {
+        callback(); // 所有图片都加载完毕时，调用callback函数
+      }
+    };
+    images[imageUrls[i]].src = imageUrls[i]; // 设置图片源以开始加载
+  }
+ 
+  return images;
+}
+
+
+
+
+
+   </script>
+</body>
+</html>
